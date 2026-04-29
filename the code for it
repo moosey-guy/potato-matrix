@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Potato Matrix Insanity</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+    }
+
+    .potato {
+      position: fixed;
+      font-size: 3rem;
+      pointer-events: none;
+      z-index: 10;
+      will-change: transform;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  // 🥔 POTATO PHYSICS SYSTEM
+  const potatoes = [];
+
+  function spawnPotato() {
+    const el = document.createElement("div");
+    el.innerText = "🥔";
+    el.className = "potato";
+
+    const potato = {
+      el,
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      vx: (Math.random() - 0.5) * 10,
+      vy: (Math.random() - 0.5) * 10
+    };
+
+    document.body.appendChild(el);
+    potatoes.push(potato);
+  }
+
+  // 🚀 500 potatoes per second
+  setInterval(() => {
+    for (let i = 0; i < 50; i++) {
+      spawnPotato();
+    }
+  }, 100);
+
+  function updatePotatoes() {
+    for (let p of potatoes) {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // bounce off walls
+      if (p.x <= 0 || p.x >= window.innerWidth - 50) p.vx *= -1;
+      if (p.y <= 0 || p.y >= window.innerHeight - 50) p.vy *= -1;
+
+      p.el.style.transform = `translate(${p.x}px, ${p.y}px)`;
+    }
+
+    requestAnimationFrame(updatePotatoes);
+  }
+  updatePotatoes();
+
+
+  // 💻 MATRIX (your version, upgraded)
+
+  // Create canvas
+  const canvas = document.createElement("canvas");
+  document.body.appendChild(canvas);
+
+  canvas.style.position = "fixed";
+  canvas.style.top = "0";
+  canvas.style.left = "0";
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
+  canvas.style.zIndex = "1";
+  canvas.style.pointerEvents = "none";
+
+  const ctx = canvas.getContext("2d");
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  const letters = "アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const fontSize = 16;
+  let columns = Math.floor(canvas.width / fontSize);
+  let drops = Array(columns).fill(1);
+
+  function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 🔴 red hacker glow
+    ctx.fillStyle = "#ff1a1a";
+    ctx.shadowColor = "#ff0000";
+    ctx.shadowBlur = 6;
+
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters[Math.floor(Math.random() * letters.length)];
+
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+
+      drops[i]++;
+    }
+  }
+
+  setInterval(draw, 33);
+</script>
+
+</body>
+</html>
