@@ -119,6 +119,57 @@
 
   setInterval(draw, 33);
 </script>
+// 💻 HACKER TEXT POPUPS
 
+const messages = [
+  "ACCESSING PASSWORDS...",
+  "BYPASSING FIREWALL...",
+  "DECRYPTING FILES...",
+  "INJECTING PAYLOAD...",
+  "ACCESS GRANTED",
+  "DOWNLOADING DATA...",
+  "ROOT ACCESS ENABLED",
+  "CRACKING HASH...",
+  "ESCALATING PRIVILEGES...",
+  "CONNECTED TO SERVER..."
+];
+
+function createPopup() {
+  const el = document.createElement("div");
+
+  el.innerText = messages[Math.floor(Math.random() * messages.length)];
+
+  el.style.position = "fixed";
+  el.style.left = "20px";
+  el.style.bottom = "0px";
+  el.style.color = "#ff1a1a";
+  el.style.fontFamily = "monospace";
+  el.style.fontSize = "14px";
+  el.style.textShadow = "0 0 6px red";
+  el.style.zIndex = "99999";
+  el.style.opacity = "1";
+
+  document.body.appendChild(el);
+
+  let y = 0;
+
+  function animate() {
+    y += 1;
+    el.style.transform = `translateY(-${y}px)`;
+
+    if (y < window.innerHeight - 50) {
+      requestAnimationFrame(animate);
+    } else {
+      el.remove();
+    }
+  }
+
+  animate();
+}
+
+// spawn messages constantly
+setInterval(() => {
+  createPopup();
+}, 300);
 </body>
 </html>
